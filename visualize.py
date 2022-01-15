@@ -1,13 +1,13 @@
 import os.path
 
-from stable_baselines3 import A2C,PPO
+from stable_baselines3 import PPO
 
 from TrackEnv2D import TrackEnv2D
 
 env = TrackEnv2D(moving_target=True)
 
-#model = A2C("MlpPolicy", env,verbose=1)
-model = PPO.load(os.path.join("run_mv_fast_target_w_dist_vector_no_abs","best_model.zip"))
+
+model = PPO.load(os.path.join("run_1","best_model.zip"),device='cpu')
 
 obs = env.reset()
 step = 0

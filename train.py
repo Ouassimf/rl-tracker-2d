@@ -1,17 +1,12 @@
 import os
 
-import gym
 import numpy as np
-from matplotlib import pyplot as plt
-from stable_baselines3.common.env_checker import check_env
+
 
 from TrackEnv2D import TrackEnv2D
-from stable_baselines3 import PPO,SAC,A2C,DQN
-
-from stable_baselines3.common import results_plotter
+from stable_baselines3 import PPO
 from stable_baselines3.common.monitor import Monitor
-from stable_baselines3.common.results_plotter import load_results, ts2xy, plot_results
-from stable_baselines3.common.noise import NormalActionNoise
+from stable_baselines3.common.results_plotter import load_results, ts2xy
 from stable_baselines3.common.callbacks import BaseCallback
 
 
@@ -60,43 +55,24 @@ class SaveOnBestTrainingRewardCallback(BaseCallback):
         return True
 
 env = TrackEnv2D()
-timesteps = 12250000
+timesteps = 50500500
 
-run_name = "run_mv_fast_target_w_dist_vector_no_abs"
+run_name = "run_1"
 log_dir = os.path.join(os.getcwd(),run_name)
 os.makedirs(log_dir, exist_ok=True)
-#check_env(env)
+
 env = Monitor(env, log_dir)
-#model = A2C.load("{}.gym".format(run_name))
-model = PPO("MlpPolicy", env,verbose=1)
-#model.load("{}.gym".format(run_name))
+
+model = PPO("MlpPolicy", env,verbose=1,device='cpu')
+
 callback = SaveOnBestTrainingRewardCallback(check_freq=1000, log_dir=log_dir)
 model.learn(total_timesteps=timesteps,log_interval=1000,callback=callback)
 model.save("{}.gym".format(run_name))
 
-#plot_results([log_dir], timesteps, results_plotter.X_TIMESTEPS, "TD3 LunarLander")
-#plt.show()
+
 
 obs = env.reset()
 step = 0
 rewards = []
-# while True:
-#     action, _states = model.predict(obs)
-#     obs, reward, done, info = env.step(action)
-#     step += 1
-#     #env.render()
-#     #print(step)
-#     #print(reward)
-#     #print(done)
-#     rewards.append(reward)
-#     if done :
-#         print("##################")
-#         print(step)
-#         print(sum(rewards))
-#         rewards = []
-#         step = 0
-#         obs = env.reset()
-#
-#         continue
 
 
